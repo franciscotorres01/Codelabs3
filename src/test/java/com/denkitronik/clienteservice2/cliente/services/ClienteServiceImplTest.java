@@ -70,8 +70,7 @@ class ClienteServiceImplTest {
         Page<Cliente> resultado = clienteService.findAll(pageable);
 
         // Assert
-        // FALLO DELIBERADO (Paso 6): el valor correcto es 1
-        assertThat(resultado.getContent()).hasSize(99);
+        assertThat(resultado.getContent()).hasSize(1);   // restaurado (antes: 99)
         assertThat(resultado.getTotalElements()).isEqualTo(1);
         verify(clienteDao, times(1)).findAll(pageable);
     }
@@ -223,4 +222,13 @@ class ClienteServiceImplTest {
     @DisplayName("findAllRegiones — devuelve la lista de regiones")
     void findAllRegiones_debeRetornarLista() {
         // Arrange
-        when(regionDao.findAll()).thenReturn(List.of
+        when(regionDao.findAll()).thenReturn(List.of(region));
+
+        // Act
+        List<Region> resultado = clienteService.findAllRegiones();
+
+        // Assert
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getNombre()).isEqualTo("Sudamérica");
+    }
+}
